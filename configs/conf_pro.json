@@ -1,0 +1,12 @@
+{
+  "server": {
+    "name": "bgs_server",
+    "port": 8080
+  },
+  "mysql": {
+    "host": "",
+    "port": 3306,
+    "username": "root",
+    "password": "123456"
+  }
+}
