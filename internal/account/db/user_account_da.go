@@ -13,3 +13,14 @@ func AddUserAccount(user *model.UserAccount) (int64, error) {
 	}
 	return r.LastInsertId()
 }
+
+func GetUserAccount(user *model.UserAccount) (*model.UserAccount, error) {
+	row := init_config.Db.QueryRow("select username,password,phone,email,id from user_account where username = ? or phone = ? or email = ? limit 1",
+		user.Username, user.Phone, user.Email)
+	du := &model.UserAccount{}
+	err := row.Scan(&du.Username, &du.Password, &du.Phone, &du.Email, &du.Id)
+	if err != nil {
+		return nil, err
+	}
+	return du, nil
+}

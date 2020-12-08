@@ -3,15 +3,15 @@ package model
 import "time"
 
 type UserAccount struct {
-	Id          int64 `json:"id" req:"id"`
+	Id          int64 `json:"id" form:"id"`
 	Ban         bool
-	Username    string `json:"username" req:"username"`
-	Password    string `json:"password" req:"password"`
-	Phone       string `json:"phone" req:"phone"`
-	PhoneUseful string `json:"phoneUseful" req:"phoneUseful"`
-	Email       string `json:"email" req:"email"`
-	EmailUseful bool   `json:"emailUseful" req:"emailUseful"`
-	HeaderPath  string `json:"headerPath" req:"headerPath"`
+	Username    string `json:"username" form:"username"`
+	Password    string `json:"password" form:"password"`
+	Phone       string `json:"phone" form:"phone"`
+	PhoneUseful bool   `json:"phoneUseful" form:"phoneUseful"`
+	Email       string `json:"email" form:"email"`
+	EmailUseful bool   `json:"emailUseful" form:"emailUseful"`
+	HeaderPath  string `json:"headerPath" form:"headerPath"`
 	CreateTime  time.Time
 	Level       int
 }
@@ -44,9 +44,9 @@ type UserRole struct {
 }
 
 type UserOnlineInfo struct {
-	Id int64
-	UserId int64
-	LiveTime int64
+	Id         int64
+	UserId     int64
+	LiveTime   int64
 	CreateTime time.Time
-	Type int
+	Type       int
 }
