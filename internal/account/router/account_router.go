@@ -5,6 +5,7 @@ import (
 	"github.com/BryceSun/beacon_academy/init_config"
 	"github.com/BryceSun/beacon_academy/internal/account/handler"
 	"github.com/BryceSun/beacon_academy/internal/account/model"
+	"github.com/BryceSun/beacon_academy/internal/common"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,19 +22,13 @@ func init() {
 func register(ctx *gin.Context) {
 	var u model.UserAccount
 	ctx.Bind(&u)
-	handler.AddUserAccount(&u)
-	ctx.JSON(200, u)
+	ctx.JSON(common.Output(handler.AddUserAccount(&u)))
 }
 
 func login(ctx *gin.Context) {
 	var u model.UserAccount
 	ctx.Bind(&u)
-	token, err := handler.GetUserToken(&u)
-	if err != nil {
-		ctx.JSON(304, err)
-	}
-	ctx.Header("authentication", token)
-	ctx.JSON(200, token)
+	ctx.JSON(common.Output(handler.GetUserToken(&u)))
 }
 
 func hello(ctx *gin.Context) {

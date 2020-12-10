@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"github.com/BryceSun/beacon_academy/internal/account/db"
 	"github.com/BryceSun/beacon_academy/internal/account/model"
-	"github.com/BryceSun/beacon_academy/internal/common/utils"
+	"github.com/BryceSun/beacon_academy/internal/common"
 )
 
-func AddUserAccount(u *model.UserAccount) {
+func AddUserAccount(u *model.UserAccount) (int64, error) {
 	u.Password = fmt.Sprintf("%x", md5.Sum([]byte(u.Password)))
-	db.AddUserAccount(u)
+	return db.AddUserAccount(u)
 }
 
 func GetUserToken(u *model.UserAccount) (string, error) {
@@ -26,5 +26,5 @@ func GetUserToken(u *model.UserAccount) (string, error) {
 	if password != du.Password {
 		return "", errors.New("password is wrong")
 	}
-	return utils.GetToken(du)
+	return common.GetToken(du)
 }

@@ -1,7 +1,7 @@
 package init_config
 
 import (
-	"github.com/BryceSun/beacon_academy/internal/common/utils"
+	"github.com/BryceSun/beacon_academy/internal/common"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -43,7 +43,7 @@ func Authorize(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	t, err := jwt.ParseWithClaims(token, jwt.MapClaims{}, utils.GetKey)
+	t, err := jwt.ParseWithClaims(token, jwt.MapClaims{}, common.GetKey)
 	if err != nil {
 		c.JSON(302, err)
 		c.Abort()
