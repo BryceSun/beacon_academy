@@ -29,6 +29,7 @@ func init() {
 type configure struct {
 	Server serverConf
 	Mysql  mysqlConf
+	Redis  redisConf
 }
 
 type serverConf struct {
@@ -43,10 +44,21 @@ type mysqlConf struct {
 	Password string
 }
 
-func MysqlConf() mysqlConf {
-	return Configure.Mysql
+type redisConf struct {
+	Host     string
+	Port     int
+	Password string
+	Db       int
 }
 
 func ServerConf() serverConf {
 	return Configure.Server
+}
+
+func MysqlConf() mysqlConf {
+	return Configure.Mysql
+}
+
+func RedisConf() redisConf {
+	return Configure.Redis
 }

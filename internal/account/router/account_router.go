@@ -5,8 +5,9 @@ import (
 	"github.com/BryceSun/beacon_academy/init_config"
 	"github.com/BryceSun/beacon_academy/internal/account/handler"
 	"github.com/BryceSun/beacon_academy/internal/account/model"
-	"github.com/BryceSun/beacon_academy/internal/common"
+	. "github.com/BryceSun/beacon_academy/internal/common"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func init() {
@@ -15,6 +16,7 @@ func init() {
 	{
 		v1.POST("/info", register)
 		v1.POST("/token", login)
+		v1.DELETE("/token", logout)
 		v1.GET("/hello", hello)
 	}
 }
@@ -22,17 +24,27 @@ func init() {
 func register(ctx *gin.Context) {
 	var u model.UserAccount
 	ctx.Bind(&u)
-	ctx.JSON(common.Output(handler.AddUserAccount(&u)))
+	ctx.JSON(Output(handler.AddUserAccount(&u)))
 }
 
 func login(ctx *gin.Context) {
 	var u model.UserAccount
 	ctx.Bind(&u)
-	ctx.JSON(common.Output(handler.GetUserToken(&u)))
+	ctx.JSON(Output(handler.GetUserToken(&u)))
+}
+
+func updateToken(ctx *gin.Context) {
+	ctx.JSON(Output(handler.GetUserToken(&u)))
+}
+
+func logout(ctx *gin.Context) {
+	uid, _ := ctx.Get("uid")
+	id, _ := uid.(int)
+	handler.DeleteUserToken(id)
+	ctx.JSON(http.StatusOK, "log out")
 }
 
 func hello(ctx *gin.Context) {
-
 	fmt.Println("hello world")
 	ctx.JSON(200, "hello world")
 }

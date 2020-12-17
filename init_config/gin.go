@@ -1,7 +1,7 @@
 package init_config
 
 import (
-	"github.com/BryceSun/beacon_academy/internal/common"
+	. "github.com/BryceSun/beacon_academy/internal/common"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -15,7 +15,7 @@ func init() {
 	r := gin.Default()
 	Engine = r
 	root := r.Group("/")
-	root.Use(Authorize)
+	root.Use(authorize)
 	RootRouter = root
 }
 
@@ -33,46 +33,26 @@ func inWhiteList(c *gin.Context) bool {
 	return false
 }
 
-func Authorize(c *gin.Context) {
+func authorize(c *gin.Context) {
 	if inWhiteList(c) {
 		return
 	}
 	token := c.GetHeader("authorization")
 	if len(token) == 0 {
-		c.JSON(302, gin.H{"error": "token is needed"})
+		c.JSON(Output2(ParamsAreNeeded.New("token缺失")))
 		c.Abort()
 		return
 	}
-	t, err := jwt.ParseWithClaims(token, jwt.MapClaims{}, common.GetKey)
+	t, err := jwt.ParseWithClaims(token, jwt.MapClaims{}, GetKey)
 	if err != nil {
 		c.JSON(302, err)
 		c.Abort()
 		return
 	}
-	c.Set("username", t.Claims.(jwt.MapClaims)["unm"])
+	c.Set("username", t.Claims.(ClaimsPlus).Username)
+	c.Set("userId", t.Claims.(ClaimsPlus).UserId)
 	c.Next()
+
 	status := c.Writer.Status()
 	log.Println(status)
 }
-
-//
-//func authorize() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		t := time.Now()
-//
-//		// Set example variable
-//		//c.Set("example", "12345")
-//
-//		// before request
-//
-//		c.Next()
-//
-//		// after request
-//		latency := time.Since(t)
-//		log.Print(latency)
-//
-//		// access the status we are sending
-//		status := c.Writer.Status()
-//		log.Println(status)
-//	}
-//}

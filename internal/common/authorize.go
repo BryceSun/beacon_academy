@@ -7,6 +7,13 @@ import (
 	"time"
 )
 
+type ClaimsPlus struct {
+	Username  string
+	UserId    int64
+	HeaderImg string
+	jwt.StandardClaims
+}
+
 func GetKey(t *jwt.Token) (interface{}, error) {
 	key, ok := t.Header["key"].(string)
 	if !ok {
@@ -20,11 +27,12 @@ func GetToken(user *model.UserAccount) (string, error) {
 
 	expireTime := time.Now().Add(5 * time.Minute).Unix()
 
-	claims := make(jwt.MapClaims)
-	claims["exp"] = expireTime
-	claims["iat"] = time.Now().Unix()
-	claims["uid"] = user.Id
-	claims["unm"] = user.Username
+	claims := ClaimsPlus{}
+	claims.ExpiresAt = expireTime
+	claims.IssuedAt = time.Now().Unix()
+	claims.UserId = user.Id
+	claims.Username = user.Username
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token.Header["key"] = user.Username
 	key, _ := GetKey(token)
