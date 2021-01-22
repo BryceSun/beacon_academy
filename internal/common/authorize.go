@@ -4,6 +4,7 @@ import (
 	"encoding/base32"
 	"github.com/BryceSun/beacon_academy/internal/account/model"
 	"github.com/dgrijalva/jwt-go"
+	"strconv"
 	"time"
 )
 
@@ -37,4 +38,18 @@ func GetToken(user *model.UserAccount) (string, error) {
 	token.Header["key"] = user.Username
 	key, _ := GetKey(token)
 	return token.SignedString(key)
+}
+
+func UpdateToken(claims ClaimsPlus) (string, error) {
+	expireTime := time.Now().Add(5 * time.Minute).Unix()
+	claims.ExpiresAt = expireTime
+	claims.IssuedAt = time.Now().Unix()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	key, _ := GetKey(token)
+	return token.SignedString(key)
+}
+
+func TokenKey(uid int64) string {
+	tokenKey := "token:" + strconv.FormatInt(uid, 10)
+	return tokenKey
 }

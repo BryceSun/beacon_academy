@@ -7,7 +7,6 @@ import (
 	"github.com/BryceSun/beacon_academy/internal/account/model"
 	. "github.com/BryceSun/beacon_academy/internal/common"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func init() {
@@ -33,15 +32,10 @@ func login(ctx *gin.Context) {
 	ctx.JSON(Output(handler.GetUserToken(&u)))
 }
 
-func updateToken(ctx *gin.Context) {
-	ctx.JSON(Output(handler.GetUserToken(&u)))
-}
-
 func logout(ctx *gin.Context) {
 	uid, _ := ctx.Get("uid")
-	id, _ := uid.(int)
-	handler.DeleteUserToken(id)
-	ctx.JSON(http.StatusOK, "log out")
+	id, _ := uid.(int64)
+	ctx.JSON(Output(handler.DeleteUserToken(id)))
 }
 
 func hello(ctx *gin.Context) {

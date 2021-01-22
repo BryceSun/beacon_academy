@@ -5,6 +5,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"log"
+	"time"
 )
 
 var RootRouter *gin.RouterGroup
@@ -43,16 +44,36 @@ func authorize(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	t, err := jwt.ParseWithClaims(token, jwt.MapClaims{}, GetKey)
+	t, err := jwt.ParseWithClaims(token, &ClaimsPlus{}, GetKey)
 	if err != nil {
-		c.JSON(302, err)
+		c.JSON(Output2(err))
 		c.Abort()
 		return
 	}
-	c.Set("username", t.Claims.(ClaimsPlus).Username)
-	c.Set("userId", t.Claims.(ClaimsPlus).UserId)
-	c.Next()
-
-	status := c.Writer.Status()
-	log.Println(status)
+	claims := t.Claims.(*ClaimsPlus)
+	c.Set("username", claims.Username)
+	c.Set("userId", claims.UserId)
+	//检查redis中的token列表
+	tokenKey := TokenKey(claims.UserId)
+	val, err := Redis.Get(tokenKey).Result()
+	if err != nil {
+		c.JSON(Output2(err))
+		c.Abort()
+		return
+	}
+	if val != token {
+		c.JSON(Output2(&NotAuthorized))
+		c.Abort()
+		return
+	}
+	iat := claims.IssuedAt
+	du := time.Since(time.Unix(iat, 0))
+	if du.Minutes() >= 1 && !(c.Request.URL.Path == "/account/token" && c.Request.Method == "DELETE") {
+		token, _ = UpdateToken(*claims)
+		//将新token加入redis
+		Redis.Set(tokenKey, token, time.Minute*5)
+		c.Header("authorization", token)
+		c.Header("Access-Control-Expose-Headers", "Authorization")
+		c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Connection, User-Agent, Cookie, Authorization")
+	}
 }

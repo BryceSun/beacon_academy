@@ -3,9 +3,11 @@ package handler
 import (
 	"crypto/md5"
 	"fmt"
+	. "github.com/BryceSun/beacon_academy/init_config"
 	"github.com/BryceSun/beacon_academy/internal/account/db"
 	"github.com/BryceSun/beacon_academy/internal/account/model"
 	. "github.com/BryceSun/beacon_academy/internal/common"
+	"time"
 )
 
 func AddUserAccount(u *model.UserAccount) (int64, error) {
@@ -25,9 +27,21 @@ func GetUserToken(u *model.UserAccount) (string, error) {
 	if password != du.Password {
 		return "", ParamsAreWrong.New("密码错误")
 	}
-	return GetToken(du)
+	token, err := GetToken(du)
+	if err == nil {
+		Redis.Set(TokenKey(du.Id), token, time.Minute*5)
+	}
+	return token, err
 }
 
-func DeleteUserToken(id int) {
-
+func DeleteUserToken(uid int64) (string, error) {
+	tokenKey := TokenKey(uid)
+	val, err := Redis.Del(tokenKey).Result()
+	if err != nil {
+		return "", err
+	}
+	if val == 0 {
+		return "", &OperateFailure
+	}
+	return "logout!", nil
 }

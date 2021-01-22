@@ -17,6 +17,7 @@ type (
 	systemError       string
 	operateNotAllowed string
 	operateFailure    string
+	notAuthorized     string
 )
 
 var (
@@ -27,6 +28,7 @@ var (
 	SystemError       systemError       = "系统错误"
 	OperateNotAllowed operateNotAllowed = "禁止操作"
 	OperateFailure    operateFailure    = "操作失败"
+	NotAuthorized     notAuthorized     = "未登录"
 )
 
 func (err *dataAlreadyExist) Error() string {
@@ -48,6 +50,9 @@ func (err *operateNotAllowed) Error() string {
 	return string(*err)
 }
 func (err *operateFailure) Error() string {
+	return string(*err)
+}
+func (err *notAuthorized) Error() string {
 	return string(*err)
 }
 
@@ -106,6 +111,13 @@ func (err *operateFailure) New(info string) *operateFailure {
 	e := operateFailure(info)
 	return &e
 }
+func (err *notAuthorized) New(info string) *notAuthorized {
+	if info == "" {
+		return err
+	}
+	e := notAuthorized(info)
+	return &e
+}
 
 func (err *dataAlreadyExist) StatusCode() int {
 	return http.StatusForbidden
@@ -127,4 +139,7 @@ func (err *operateNotAllowed) StatusCode() int {
 }
 func (err *operateFailure) StatusCode() int {
 	return http.StatusNotModified
+}
+func (err *notAuthorized) StatusCode() int {
+	return http.StatusUnauthorized
 }
