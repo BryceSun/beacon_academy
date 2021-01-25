@@ -30,6 +30,7 @@ type configure struct {
 	Server serverConf
 	Mysql  mysqlConf
 	Redis  redisConf
+	Email  emailConf
 }
 
 type serverConf struct {
@@ -51,6 +52,13 @@ type redisConf struct {
 	Db       int
 }
 
+type emailConf struct {
+	Host     string
+	Port     int
+	Account  string
+	Password string
+}
+
 func ServerConf() serverConf {
 	return Configure.Server
 }
@@ -61,4 +69,8 @@ func MysqlConf() mysqlConf {
 
 func RedisConf() redisConf {
 	return Configure.Redis
+}
+
+func EmailConf() emailConf {
+	return Configure.Email
 }

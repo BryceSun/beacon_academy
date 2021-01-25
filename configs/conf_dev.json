@@ -16,5 +16,11 @@
     "port": 6379,
     "password": "",
     "db": 0
+  },
+  "email": {
+    "host": "smtp.163.com",
+    "account": "15818366547@163.com",
+    "password": "19930927fdkl",
+    "port": 25
   }
 }

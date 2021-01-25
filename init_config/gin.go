@@ -27,6 +27,10 @@ func inWhiteList(c *gin.Context) bool {
 	//register
 	case path == "/account/info" && c.Request.Method == "POST":
 		return true
+	case path == "/account/info/v1" && c.Request.Method == "POST":
+		return true
+	case path == "/account/info/v2" && c.Request.Method == "POST":
+		return true
 		//login
 	case path == "/account/token" && c.Request.Method == "POST":
 		return true
@@ -68,7 +72,7 @@ func authorize(c *gin.Context) {
 	}
 	iat := claims.IssuedAt
 	du := time.Since(time.Unix(iat, 0))
-	if du.Minutes() >= 1 && !(c.Request.URL.Path == "/account/token" && c.Request.Method == "DELETE") {
+	if du.Minutes() >= 1 && c.Request.URL.Path != "/account/token" {
 		token, _ = UpdateToken(*claims)
 		//将新token加入redis
 		Redis.Set(tokenKey, token, time.Minute*5)

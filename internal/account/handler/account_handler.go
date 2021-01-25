@@ -15,6 +15,24 @@ func AddUserAccount(u *model.UserAccount) (int64, error) {
 	return db.AddUserAccount(u)
 }
 
+func AddUserAccountByEmail(u *model.UserAccount) (string, error) {
+	username := u.Username
+	to := []string{
+		u.Email,
+	}
+	err := Eamil.SendMail(to, username)
+	if err != nil {
+		return "", err
+	}
+	return "ok", err
+}
+
+//todo
+func AddUserAccountByPhone(u *model.UserAccount) (int64, error) {
+	u.Password = fmt.Sprintf("%x", md5.Sum([]byte(u.Password)))
+	return db.AddUserAccount(u)
+}
+
 func GetUserToken(u *model.UserAccount) (string, error) {
 	if len(u.Password) == 0 || len(u.Username) == 0 {
 		return "", ParamsAreNeeded.New("请输入用户名和密码")
