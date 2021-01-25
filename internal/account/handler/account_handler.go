@@ -16,11 +16,15 @@ func AddUserAccount(u *model.UserAccount) (int64, error) {
 }
 
 func AddUserAccountByEmail(u *model.UserAccount) (string, error) {
-	username := u.Username
 	to := []string{
 		u.Email,
 	}
-	err := Eamil.SendMail(to, username)
+	msg := "From: 15818366547@163.com\r\n" +
+		"To: 865874804@qq.com\r\n" +
+		"Subject: discount Gophers!\r\n" +
+		"\r\n" +
+		"This is the email body.\r\n"
+	err := Eamil.SendMail(to, msg)
 	if err != nil {
 		return "", err
 	}
