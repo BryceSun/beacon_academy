@@ -2,11 +2,14 @@ package handler
 
 import (
 	"crypto/md5"
+	"crypto/tls"
 	"fmt"
 	. "github.com/BryceSun/beacon_academy/init_config"
 	"github.com/BryceSun/beacon_academy/internal/account/db"
 	"github.com/BryceSun/beacon_academy/internal/account/model"
 	. "github.com/BryceSun/beacon_academy/internal/common"
+	gomail "gopkg.in/mail.v2"
+	"log"
 	"time"
 )
 
@@ -24,11 +27,27 @@ func AddUserAccountByEmail(u *model.UserAccount) (string, error) {
 		"Subject: discount Gophers!\r\n" +
 		"\r\n" +
 		"This is the email body.\r\n"
-	err := Eamil.SendMail(to, msg)
+	err := Email.SendMail(to, msg)
 	if err != nil {
 		return "", err
 	}
 	return "ok", err
+}
+
+func AddUserAccountByEmailV2(u *model.UserAccount) (string, error) {
+	m := gomail.NewMessage()
+	m.SetHeader("From", "15818366547@163.com")
+	m.SetHeader("To", "865874804@qq.com")
+	m.SetHeader("Subject", "test gomail")
+	m.SetBody("text/plain", "hello wjw")
+	d := gomail.NewDialer(Email.Host, Email.Port, Email.Account, Email.Password)
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	if err := d.DialAndSend(m); err != nil {
+		log.Println(err)
+		return "", err
+	}
+	return "ok", nil
 }
 
 //todo
@@ -51,7 +70,7 @@ func GetUserToken(u *model.UserAccount) (string, error) {
 	}
 	token, err := GetToken(du)
 	if err == nil {
-		Redis.Set(TokenKey(du.Id), token, time.Minute*5)
+		Redis.Set(TokenKey(du.Id), token, time.Minute*30)
 	}
 	return token, err
 }

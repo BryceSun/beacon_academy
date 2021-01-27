@@ -72,10 +72,10 @@ func authorize(c *gin.Context) {
 	}
 	iat := claims.IssuedAt
 	du := time.Since(time.Unix(iat, 0))
-	if du.Minutes() >= 1 && c.Request.URL.Path != "/account/token" {
+	if du >= TokenLiveTime && c.Request.URL.Path != "/account/token" {
 		token, _ = UpdateToken(*claims)
 		//将新token加入redis
-		Redis.Set(tokenKey, token, time.Minute*5)
+		Redis.Set(tokenKey, token, TokenLiveTime)
 		c.Header("authorization", token)
 		c.Header("Access-Control-Expose-Headers", "Authorization")
 		c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Connection, User-Agent, Cookie, Authorization")

@@ -32,7 +32,7 @@ func register(ctx *gin.Context) {
 func registerByEmail(ctx *gin.Context) {
 	var u model.UserAccount
 	ctx.Bind(&u)
-	ctx.JSON(Output(handler.AddUserAccountByEmail(&u)))
+	ctx.JSON(Output(handler.AddUserAccountByEmailV2(&u)))
 }
 
 func registerByPhone(ctx *gin.Context) {

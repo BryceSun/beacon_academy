@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var TokenLiveTime = 8 * time.Hour
+
 type ClaimsPlus struct {
 	Username  string
 	UserId    int64
@@ -26,7 +28,7 @@ func GetKey(t *jwt.Token) (interface{}, error) {
 
 func GetToken(user *model.UserAccount) (string, error) {
 
-	expireTime := time.Now().Add(5 * time.Minute).Unix()
+	expireTime := time.Now().Add(TokenLiveTime).Unix()
 
 	claims := ClaimsPlus{}
 	claims.ExpiresAt = expireTime
@@ -41,7 +43,7 @@ func GetToken(user *model.UserAccount) (string, error) {
 }
 
 func UpdateToken(claims ClaimsPlus) (string, error) {
-	expireTime := time.Now().Add(5 * time.Minute).Unix()
+	expireTime := time.Now().Add(TokenLiveTime).Unix()
 	claims.ExpiresAt = expireTime
 	claims.IssuedAt = time.Now().Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

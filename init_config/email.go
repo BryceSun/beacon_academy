@@ -5,14 +5,14 @@ import (
 	"strconv"
 )
 
-var Eamil *emailClient
+var Email *emailClient
 
 func init() {
 	auth := smtp.PlainAuth("", EmailConf().Account, EmailConf().Password, EmailConf().Host)
 	client := &emailClient{}
 	client.Auth = auth
 	client.emailConf = EmailConf()
-	Eamil = client
+	Email = client
 }
 
 type emailClient struct {
