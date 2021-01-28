@@ -1,7 +1,7 @@
 package handler
 
 //冒泡排序
-func BubbleReorder(numbers []int) []int {
+func BubbleSort(numbers []int) []int {
 	l := len(numbers)
 	for ; l > 0; l-- {
 		for i := 0; i+1 < l; i++ {
@@ -14,7 +14,7 @@ func BubbleReorder(numbers []int) []int {
 }
 
 //选择排序
-func SelectReorder(numbers []int) []int {
+func SelectSort(numbers []int) []int {
 	l := len(numbers)
 	for ; l > 0; l-- {
 		max := 0
@@ -31,7 +31,7 @@ func SelectReorder(numbers []int) []int {
 }
 
 //插入排序
-func InsertReorder(numbers []int) []int {
+func InsertSort(numbers []int) []int {
 	l := len(numbers)
 	for j := 1; j < l; j++ {
 		for i := 0; i < j; i++ {
@@ -41,4 +41,28 @@ func InsertReorder(numbers []int) []int {
 		}
 	}
 	return numbers
+}
+
+//归并排序
+func MergeSort(numbers []int) []int {
+	l := len(numbers)
+	if l < 2 {
+		return numbers
+	}
+	a := (l + 1) / 2
+	na := MergeSort(numbers[:a])
+	nb := MergeSort(numbers[a:])
+	r := make([]int, l)
+	ai, bi := 0, 0
+	al, bl := a, l-a
+	for a := 0; a < l; a++ {
+		if ai < al && (bi == bl || na[ai] < nb[bi]) {
+			r[a] = na[ai]
+			ai++
+		} else if bi < bl {
+			r[a] = nb[bi]
+			bi++
+		}
+	}
+	return r
 }

@@ -14,10 +14,10 @@ func init() {
 	v1 := r.Group("/algorithm")
 	//花括号可不要，但为了可读性还是留着吧
 	{
-		v1.POST("/reorder/bubble", bubbleReorder)
-		v1.POST("/reorder/select", selectReorder)
-		v1.POST("/reorder/insert", insertReorder)
-
+		v1.POST("/sort/bubble", bubbleSort)
+		v1.POST("/sort/select", selectSort)
+		v1.POST("/sort/insert", insertSort)
+		v1.POST("/sort/merge", mergeSort)
 	}
 }
 
@@ -25,24 +25,30 @@ type Param struct {
 	Numbers []int `form:"numbers"`
 }
 
-func bubbleReorder(ctx *gin.Context) {
+func bubbleSort(ctx *gin.Context) {
 	var p Param
 	ctx.ShouldBind(&p)
 	jd := json.NewEncoder(os.Stdout)
 	jd.Encode(p)
 	pj, _ := json.Marshal(p)
 	log.Println(string(pj))
-	ctx.JSON(200, handler.BubbleReorder(p.Numbers))
+	ctx.JSON(200, handler.BubbleSort(p.Numbers))
 }
 
-func selectReorder(ctx *gin.Context) {
+func selectSort(ctx *gin.Context) {
 	var p Param
 	ctx.ShouldBind(&p)
-	ctx.JSON(200, handler.SelectReorder(p.Numbers))
+	ctx.JSON(200, handler.SelectSort(p.Numbers))
 }
 
-func insertReorder(ctx *gin.Context) {
+func insertSort(ctx *gin.Context) {
 	var p Param
 	ctx.ShouldBind(&p)
-	ctx.JSON(200, handler.InsertReorder(p.Numbers))
+	ctx.JSON(200, handler.InsertSort(p.Numbers))
+}
+
+func mergeSort(ctx *gin.Context) {
+	var p Param
+	ctx.ShouldBind(&p)
+	ctx.JSON(200, handler.MergeSort(p.Numbers))
 }
