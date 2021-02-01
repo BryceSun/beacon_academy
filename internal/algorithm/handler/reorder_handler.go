@@ -33,12 +33,18 @@ func SelectSort(numbers []int) []int {
 //插入排序
 func InsertSort(numbers []int) []int {
 	l := len(numbers)
+	if l < 2 {
+		return numbers
+	}
 	for j := 1; j < l; j++ {
-		for i := 0; i < j; i++ {
+		i := j - 1
+		x := numbers[j]
+		for ; i >= 0; i-- {
 			if numbers[i] > numbers[j] {
-				numbers[i], numbers[j] = numbers[j], numbers[i]
+				numbers[i+1] = numbers[i]
 			}
 		}
+		numbers[i] = x
 	}
 	return numbers
 }
