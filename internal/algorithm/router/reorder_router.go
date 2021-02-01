@@ -20,6 +20,7 @@ func init() {
 		v1.POST("/sort/shell", shellSort)
 		v1.POST("/sort/merge", mergeSort)
 		v1.POST("/sort/quick", quickSort)
+		v1.POST("/sort/counting", countingSort)
 	}
 }
 
@@ -65,4 +66,9 @@ func quickSort(ctx *gin.Context) {
 	var p Param
 	ctx.ShouldBind(&p)
 	ctx.JSON(200, handler.QuickSort(p.Numbers))
+}
+func countingSort(ctx *gin.Context) {
+	var p Param
+	ctx.ShouldBind(&p)
+	ctx.JSON(200, handler.CountingSort(p.Numbers))
 }

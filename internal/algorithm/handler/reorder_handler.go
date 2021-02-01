@@ -117,3 +117,32 @@ func QuickSort(numbers []int) []int {
 	QuickSort(numbers[i+1:])
 	return numbers
 }
+
+func CountingSort(numbers []int) []int {
+	l := len(numbers)
+	if l < 2 {
+		return numbers
+	}
+	max, min := 0, numbers[0]
+	for _, n := range numbers {
+		if n > max {
+			max = n
+		}
+		if n < min {
+			min = n
+		}
+	}
+	counter := make([]int, max-min+1)
+	for _, n := range numbers {
+		i := n - min
+		counter[i]++
+	}
+	j := 0
+	for i, n := range counter {
+		for ; n > 0; n-- {
+			numbers[j] = min + i
+			j++
+		}
+	}
+	return numbers
+}
