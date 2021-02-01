@@ -10,7 +10,6 @@ import (
 	. "github.com/BryceSun/beacon_academy/internal/common"
 	gomail "gopkg.in/mail.v2"
 	"log"
-	"time"
 )
 
 func AddUserAccount(u *model.UserAccount) (int64, error) {
@@ -70,7 +69,7 @@ func GetUserToken(u *model.UserAccount) (string, error) {
 	}
 	token, err := GetToken(du)
 	if err == nil {
-		Redis.Set(TokenKey(du.Id), token, time.Minute*30)
+		Redis.Set(TokenKey(du.Id), token, TokenLiveTime)
 	}
 	return token, err
 }

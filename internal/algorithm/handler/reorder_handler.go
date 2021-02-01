@@ -66,3 +66,32 @@ func MergeSort(numbers []int) []int {
 	}
 	return r
 }
+
+func QuickSort(numbers []int) []int {
+	l := len(numbers)
+	if l < 2 {
+		return numbers
+	}
+	i, j := 0, l-1
+	current := numbers[i]
+	for j > i {
+		if numbers[j] >= current {
+			j--
+		} else {
+			numbers[i] = numbers[j]
+			i++
+			for i < j && numbers[i] <= current {
+				i++
+			}
+			if numbers[i] > current {
+				numbers[j] = numbers[i]
+				j--
+			}
+		}
+
+	}
+	numbers[i] = current
+	QuickSort(numbers[:i])
+	QuickSort(numbers[i+1:])
+	return numbers
+}
