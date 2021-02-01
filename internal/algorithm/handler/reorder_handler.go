@@ -39,12 +39,28 @@ func InsertSort(numbers []int) []int {
 	for j := 1; j < l; j++ {
 		i := j - 1
 		x := numbers[j]
-		for ; i >= 0; i-- {
-			if numbers[i] > numbers[j] {
-				numbers[i+1] = numbers[i]
-			}
+		for ; i >= 0 && numbers[i] > x; i-- {
+			numbers[i+1] = numbers[i]
 		}
-		numbers[i] = x
+		numbers[i+1] = x
+	}
+	return numbers
+}
+
+func ShellSort(numbers []int) []int {
+	l := len(numbers)
+	if l < 2 {
+		return numbers
+	}
+	for gap := l / 2; gap > 0; gap /= 2 {
+		for j := gap; j < l; j++ {
+			i := j - gap
+			x := numbers[j]
+			for ; i >= 0 && numbers[i] > x; i -= gap {
+				numbers[i+gap] = numbers[i]
+			}
+			numbers[i+gap] = x
+		}
 	}
 	return numbers
 }

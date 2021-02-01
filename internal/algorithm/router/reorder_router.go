@@ -17,6 +17,7 @@ func init() {
 		v1.POST("/sort/bubble", bubbleSort)
 		v1.POST("/sort/select", selectSort)
 		v1.POST("/sort/insert", insertSort)
+		v1.POST("/sort/shell", shellSort)
 		v1.POST("/sort/merge", mergeSort)
 		v1.POST("/sort/quick", quickSort)
 	}
@@ -46,6 +47,12 @@ func insertSort(ctx *gin.Context) {
 	var p Param
 	ctx.ShouldBind(&p)
 	ctx.JSON(200, handler.InsertSort(p.Numbers))
+}
+
+func shellSort(ctx *gin.Context) {
+	var p Param
+	ctx.ShouldBind(&p)
+	ctx.JSON(200, handler.ShellSort(p.Numbers))
 }
 
 func mergeSort(ctx *gin.Context) {
